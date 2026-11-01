@@ -1,0 +1,40 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+  <div class="hero-text">
+    <p class="eyebrow">Student support portal</p>
+    <h1>Find lost things. Report found belongings.</h1>
+    <p>
+      Campus Lost & Found helps students quickly report missing belongings,
+      share found items, and submit claims for objects that may belong to them.
+    </p>
+
+    <div class="button-row">
+      <a href="/items" class="btn btn-primary">Browse Items</a>
+      <% if (currentUser) { %>
+        <a href="/report" class="btn btn-secondary">Report Lost Item</a>
+        <a href="/report" class="btn btn-secondary">Report Found Item</a>
+      <% } else { %>
+        <a href="/login" class="btn btn-secondary">Report Lost Item</a>
+        <a href="/login" class="btn btn-secondary">Report Found Item</a>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<section class="info-grid">
+  <div class="info-card">
+    <h3>1. Report</h3>
+    <p>Students can report items they lost or found on campus with a few details.</p>
+  </div>
+  <div class="info-card">
+    <h3>2. Search</h3>
+    <p>Browse through all reported items using search and category filters.</p>
+  </div>
+  <div class="info-card">
+    <h3>3. Claim</h3>
+    <p>Submit a claim for found items and keep track of your reports and claims.</p>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

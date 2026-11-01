@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+
+<section class="page-header">
+  <h1>My Reports</h1>
+</section>
+
+<% if (items.length === 0) { %>
+  <div class="empty-state">You have not reported any items yet.</div>
+<% } else { %>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Type</th>
+          <th>Location</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach((item) => { %>
+          <tr>
+            <td><%= item.name %></td>
+            <td><%= item.type %></td>
+            <td><%= item.location %></td>
+            <td><%= new Date(item.date).toLocaleDateString() %></td>
+            <td><%= item.status %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,26 @@
+<%- include('partials/header') %>
+
+<section class="form-page">
+  <div class="form-box large-box">
+    <h2>Claim Item</h2>
+
+    <div class="item-summary">
+      <p><strong>Item:</strong> <%= item.name %></p>
+      <p><strong>Category:</strong> <%= item.category %></p>
+      <p><strong>Location:</strong> <%= item.location %></p>
+      <p><strong>Date:</strong> <%= new Date(item.date).toLocaleDateString() %></p>
+      <p><strong>Description:</strong> <%= item.description || 'No description provided.' %></p>
+    </div>
+
+    <form action="/claim/<%= item._id %>" method="POST">
+      <div class="form-group">
+        <label for="explanation">Why do you believe this item belongs to you?</label>
+        <textarea id="explanation" name="explanation" rows="5" required placeholder="Explain what makes this item yours, such as color, brand, unique markings, or location details."></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary full-width">Submit Claim</button>
+    </form>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

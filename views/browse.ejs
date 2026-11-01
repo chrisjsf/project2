@@ -1,0 +1,62 @@
+<%- include('partials/header') %>
+
+<section class="page-header">
+  <h1>Browse Campus Items</h1>
+</section>
+
+<form class="filter-form" method="GET" action="/items">
+  <input type="text" name="search" value="<%= search || '' %>" placeholder="Search by item name" />
+
+  <select name="type">
+    <option value="All" <%= type === 'All' ? 'selected' : '' %>>All Types</option>
+    <option value="Lost" <%= type === 'Lost' ? 'selected' : '' %>>Lost</option>
+    <option value="Found" <%= type === 'Found' ? 'selected' : '' %>>Found</option>
+  </select>
+
+  <select name="category">
+    <option value="All" <%= category === 'All' ? 'selected' : '' %>>All Categories</option>
+    <% categories.forEach((itemCategory) => { %>
+      <option value="<%= itemCategory %>" <%= category === itemCategory ? 'selected' : '' %>>
+        <%= itemCategory %>
+      </option>
+    <% }); %>
+  </select>
+
+  <button type="submit" class="btn btn-primary">Apply</button>
+</form>
+
+<% if (items.length === 0) { %>
+  <div class="empty-state">No items match your search. Please try another keyword or filter.</div>
+<% } else { %>
+  <div class="item-grid">
+    <% items.forEach((item) => { %>
+      <article class="item-card">
+        <div class="card-top">
+          <h3><%= item.name %></h3>
+          <span class="badge <%= item.type === 'Lost' ? 'lost' : 'found' %>"><%= item.type %></span>
+        </div>
+
+        <p><strong>Category:</strong> <%= item.category %></p>
+        <p><strong>Location:</strong> <%= item.location %></p>
+        <p><strong>Date:</strong> <%= new Date(item.date).toLocaleDateString() %></p>
+        <p><strong>Reported by:</strong> <%= item.reporter ? item.reporter.name : 'Unknown' %></p>
+        <p><strong>Status:</strong> <%= item.status %></p>
+        <p class="description"><%= item.description || 'No description added.' %></p>
+
+        <%
+          const canClaim = currentUser && item.type === 'Found' && item.reporter && item.reporter._id.toString() !== currentUser.id && item.status !== 'Claim Pending';
+        %>
+
+        <% if (canClaim) { %>
+          <a href="/claim/<%= item._id %>" class="btn btn-primary small-btn">Claim Item</a>
+        <% } else if (item.type === 'Found' && currentUser && item.reporter && item.reporter._id.toString() === currentUser.id) { %>
+          <span class="muted-note">This is your item</span>
+        <% } else if (item.type === 'Found' && item.status === 'Claim Pending') { %>
+          <span class="muted-note">Claim pending</span>
+        <% } %>
+      </article>
+    <% }); %>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>
