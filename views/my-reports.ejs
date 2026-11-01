@@ -16,6 +16,7 @@
           <th>Location</th>
           <th>Date</th>
           <th>Status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -26,6 +27,11 @@
             <td><%= item.location %></td>
             <td><%= new Date(item.date).toLocaleDateString() %></td>
             <td><%= item.status %></td>
+            <td>
+              <form action="/my-reports/<%= item._id %>/delete" method="POST" onsubmit="return confirm('Delete this report? Any claims submitted for it will also be deleted.');">
+                <button type="submit" class="btn btn-danger small-btn">Delete</button>
+              </form>
+            </td>
           </tr>
         <% }); %>
       </tbody>

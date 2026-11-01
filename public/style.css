@@ -98,6 +98,11 @@ img {
   color: var(--navy);
 }
 
+.btn-danger {
+  background: var(--error);
+  color: #fff;
+}
+
 .btn:hover,
 .logout-form button:hover {
   opacity: 0.95;

@@ -1,5 +1,6 @@
 const express = require('express');
 const Item = require('../models/Item');
+const Claim = require('../models/Claim');
 const { isAuthenticated } = require('../middleware/auth');
 
 const router = express.Router();
@@ -96,6 +97,35 @@ router.post('/report', isAuthenticated, async (req, res) => {
     console.error('Report item error:', error.message);
     req.session.error = 'Unable to save the item. Please try again.';
     return res.redirect('/report');
+  }
+});
+
+router.post('/my-reports/:id/delete', isAuthenticated, async (req, res) => {
+  try {
+    const item = await Item.findOneAndDelete({
+      _id: req.params.id,
+      reporter: req.session.userId
+    });
+
+    if (!item) {
+      req.session.error = 'Report not found or you do not have permission to delete it.';
+      return res.redirect('/my-reports');
+    }
+
+    try {
+      await Claim.deleteMany({ item: item._id });
+    } catch (error) {
+      console.error('Delete report claims error:', error.message);
+      req.session.error = 'The report was deleted, but its claims could not be removed.';
+      return res.redirect('/my-reports');
+    }
+
+    req.session.message = 'Report deleted successfully.';
+    return res.redirect('/my-reports');
+  } catch (error) {
+    console.error('Delete report error:', error.message);
+    req.session.error = 'Unable to delete the report right now. Please try again.';
+    return res.redirect('/my-reports');
   }
 });
 
