@@ -12,6 +12,7 @@ const claimRoutes = require('./routes/claims');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+let databaseConnectionPromise;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -22,6 +23,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
+
+app.use(async (req, res, next) => {
+  try {
+    await connectDatabase();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.use(
   session({
@@ -53,17 +63,29 @@ app.use((req, res, next) => {
 });
 
 async function connectDatabase() {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+
   const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/campus_lost_found_fresh';
 
-  try {
-    await mongoose.connect(mongoUri, {
+  if (!databaseConnectionPromise) {
+    databaseConnectionPromise = mongoose.connect(mongoUri, {
       serverSelectionTimeoutMS: 5000
-    });
-    console.log('MongoDB connected successfully.');
-  } catch (error) {
-    console.error('MongoDB connection failed:', error.message);
-    throw error;
+    })
+      .then(() => {
+        console.log('MongoDB connected successfully.');
+      })
+      .catch((error) => {
+        console.error('MongoDB connection failed:', error.message);
+        throw error;
+      })
+      .finally(() => {
+        databaseConnectionPromise = null;
+      });
   }
+
+  await databaseConnectionPromise;
 }
 
 app.get('/', (req, res) => {
