@@ -10,7 +10,7 @@
     </p>
 
     <div class="button-row">
-      <a href="/items" class="btn btn-primary">Browse Items</a>
+      <a href="/items" class="btn btn-primary">Browse Items <span aria-hidden="true">→</span></a>
       <% if (currentUser) { %>
         <a href="/report" class="btn btn-secondary">Report Lost Item</a>
         <a href="/report" class="btn btn-secondary">Report Found Item</a>
@@ -18,6 +18,21 @@
         <a href="/login" class="btn btn-secondary">Report Lost Item</a>
         <a href="/login" class="btn btn-secondary">Report Found Item</a>
       <% } %>
+    </div>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="orbit"></div>
+    <div class="visual-card">
+      <div class="visual-card-top">
+        <span class="visual-card-label">Campus board</span>
+        <span class="visual-card-dot"></span>
+      </div>
+      <h2>Found nearby</h2>
+      <p>A little help can bring the right things home.</p>
+      <div class="visual-card-bottom">
+        <span>Community powered</span>
+        <span>↗</span>
+      </div>
     </div>
   </div>
 </section>
